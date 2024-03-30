@@ -10,7 +10,7 @@ First, make sure you have Python and pip installed on your system. Then, install
 pip install -r requirements.txt
 ```
 
-# Usage
+## Usage
 
 To run the application, use the following command:
 ```
