@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
+        <h1>Information about employees</h1>
+        <button class="btn btn-primary" id="generate-pdf-btn">Generate Report</button>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Surname</th>
+            <th scope="col">Position</th>
+            <th scope="col">Salary</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.surname }}</td>
+                <td>{{ employee.position }}</td>
+                <td>{{ employee.salary }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.getElementById('generate-pdf-btn').addEventListener('click', () => {
+        fetch('/file/download', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/pdf',
+            }
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.style.display = 'none'
+                a.href = url
+                a.download = 'Employees statistics.pdf'
+                document.body.appendChild(a);
+                a.click()
+                window.URL.revokeObjectURL(url);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'PDF Report Downloaded!'
+                })
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error occurred',
+                    text: 'Failed to download PDF report. Please try again later.'
+                });
+                console.error('Error:', error)
+            })
+    })
+</script>
+</body>
+</html>
