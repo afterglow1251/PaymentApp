@@ -16,7 +16,7 @@ def information_paragraph(s: str):
 def generate_table(employees: List[Employee], title: str, *, key: Callable, reverse: bool = False):
     sorted_employees = sorted(employees, key=key, reverse=reverse)
     employees_dicts = [{pair[0].capitalize(): pair[1] for pair in employee} for employee in sorted_employees]
-    df = pd.DataFrame(employees_dicts, index=range(1, len(employees_dicts) + 1))
+    df = pd.DataFrame(employees_dicts)
     selected_df = df.drop(columns=['Birth_date'])
 
     style = TableStyle([('GRID', (0, 0), (-1, -1), 1, colors.black),
